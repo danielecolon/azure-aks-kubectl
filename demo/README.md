@@ -4,6 +4,8 @@ This demo uses **Azure CLI** and **PowerShell** to create an Azure Kubernetes Se
 
 The accompanying script is [`aks.ps1`](aks.ps1). It is intended for a beginner-friendly presentation; it is **not** a production AKS deployment template.
 
+The folder also includes [`hello-nginx.yaml`](hello-nginx.yaml), a sample web app to deploy once the cluster is running. See [hello-nginx.md](hello-nginx.md) for a full explanation.
+
 ## What the script does
 
 1. Generates a random four-digit suffix for resource names.
@@ -73,7 +75,22 @@ kubectl get namespaces
 kubectl get pods --all-namespaces
 ```
 
-### Optional: deploy a sample application
+### Optional: deploy the hello-nginx sample app
+
+[`hello-nginx.yaml`](hello-nginx.yaml) creates a `demo` namespace, two nginx pods that show which pod served the page, and a public `LoadBalancer` Service. It is **not** applied by `aks.ps1`:
+
+```powershell
+kubectl apply -f hello-nginx.yaml
+kubectl get pods -n demo
+kubectl get service hello-nginx -n demo --watch   # wait for EXTERNAL-IP, then browse to http://<EXTERNAL-IP>
+
+# Remove the sample app
+kubectl delete -f hello-nginx.yaml
+```
+
+See [hello-nginx.md](hello-nginx.md) for an object-by-object walkthrough, demo ideas, and troubleshooting.
+
+### Optional: deploy a sample application imperatively
 
 The following commands are **not** executed by `aks.ps1`; they are optional exercises for the presentation:
 
@@ -140,3 +157,4 @@ A result of `false` indicates the resource group no longer exists.
 - [Install kubectl and kubelogin for AKS](https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli#connect-to-the-cluster)
 - [Azure CLI `az aks` commands](https://learn.microsoft.com/en-us/cli/azure/aks)
 - [Kubernetes kubectl reference](https://kubernetes.io/docs/reference/kubectl/)
+
